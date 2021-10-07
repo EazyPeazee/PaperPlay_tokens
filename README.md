@@ -4,7 +4,7 @@ This repo defines the schema for PaperPlay tokens and provides a Python implemen
 
 ## Token schema
 
-A token always starts with `https://paperplay.en/`
+A token always starts with `https://paperplay.eu/`
 
 ### Wildcard tokens
 
@@ -13,6 +13,11 @@ For wildcard tokens the local path is `id/{id}`
 ### Spotify tokens
 
 For Spotify tokens the local path is `s/{spotify-uri}`. The variable `spotify-uri` is shortened by the prefix `spotify:`. To get a valid spotify-uri the prefix needs to be prepended.
+
+### Examples
+
+`https://paperplay.eu/i/1` - Wildcard token number one
+`https://paperplay.eu/s/album:6pHuh1UxL2SDBjsd6MxfCr` - Bibi Blocksberg episode 137 on Spotify
 
 ## JSON spec for generating tokens
 
