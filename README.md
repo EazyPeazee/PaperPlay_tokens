@@ -17,6 +17,7 @@ For Spotify tokens the local path is `s/{spotify-uri}`. The variable `spotify-ur
 ### Examples
 
 `https://paperplay.eu/i/1` - Wildcard token number one
+
 `https://paperplay.eu/s/album:6pHuh1UxL2SDBjsd6MxfCr` - Bibi Blocksberg episode 137 on Spotify
 
 ## JSON spec for generating tokens
