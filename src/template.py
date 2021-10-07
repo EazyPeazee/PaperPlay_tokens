@@ -15,11 +15,15 @@ from model.card import Card
 class Template:
     def __init__(self,
                  image_path: Path,
-                 card_size=(50 * mm, 50 * mm),
-                 min_indent=(3 * mm, 3 * mm)) -> None:
+                 card_size=50,
+                 min_margin=3,
+                 qr_padding=3,
+                 img_padding=2) -> None:
         self.image_path = image_path
-        self.card_size = card_size
-        self.min_indent = min_indent
+        self.card_size = (card_size * mm, card_size * mm)
+        self.min_margin = (min_margin * mm, min_margin * mm)
+        self.qr_padding = qr_padding * mm
+        self.img_padding = img_padding * mm
 
     def make_tokens(self, cards: List[Card], sink: BinaryIO, paper_size=A4):
         num_cols = self._get_num_cols(paper_size)
@@ -32,10 +36,10 @@ class Template:
             tags_on_page = min(num_cols * num_rows, len(cards) - idx)
             page_cards = cards[idx:idx + tags_on_page]
             self._make_page(c, page_cards, lambda item: ImageReader(self.image_path.joinpath(item.image_source)),
-                            1 * mm, paper_size, True, True, False)
+                            self.img_padding, paper_size, True, True)
 
-            self._make_page(c, page_cards, self._create_qr_img, 12 *
-                            mm, paper_size, False, False, True)
+            self._make_page(c, page_cards, self._create_qr_img,
+                            self.qr_padding, paper_size, False, False)
             idx += tags_on_page
 
         c.save()
@@ -56,12 +60,12 @@ class Template:
         return [(pagesize[0] - num_cols * self.card_size[0]) / 2, (pagesize[1] - num_rows * self.card_size[1]) / 2]
 
     def _get_num_cols(self, pagesize):
-        return floor((pagesize[0] - self.min_indent[0] * 2) / self.card_size[0])
+        return floor((pagesize[0] - self.min_margin[0] * 2) / self.card_size[0])
 
     def _get_num_rows(self, pagesize):
-        return floor((pagesize[1] - self.min_indent[1] * 2) / self.card_size[1])
+        return floor((pagesize[1] - self.min_margin[1] * 2) / self.card_size[1])
 
-    def _make_page(self, canvas, cards, img_func, padding, pagesize, l2r=True, frame=True, text=True):
+    def _make_page(self, canvas, cards, img_func, padding, pagesize, l2r=True, frame=True):
         num_cols = self._get_num_cols(pagesize)
         num_rows = self._get_num_rows(pagesize)
         indent = self._get_indent(pagesize, num_rows, num_cols)
@@ -81,9 +85,6 @@ class Template:
                             posx, posy, self.card_size[0], self.card_size[1])
                     canvas.drawImage(img_func(card), posx + padding, posy +
                                      padding, self.card_size[0] - 2*padding, self.card_size[1] - 2*padding)
-                    if text:
-                        canvas.drawCentredString(
-                            posx + self.card_size[0] / 2, posy + 10, card.id)
                     if l2r:
                         posx += self.card_size[0]
                     else:
