@@ -35,13 +35,21 @@ def create_arg_parser():
                         help='Paddingn of images in mm', default=1)
     parser.add_argument('--qr-padding', type=float,
                         help='Padding of QR-codes', default=3)
+    parser.add_argument(
+        '--multiple-qrs', help='Multuple QR codes per card', action='count', default=0)
     return parser
 
 
 if __name__ == "__main__":
     args = create_arg_parser().parse_args()
     cards = parse_spec(args.spec)
-    template = Template(args.spec.parent, args.size,
-                        args.margin, args.qr_padding, args.img_padding)
+    template = Template(
+        args.spec.parent,
+        args.size,
+        args.margin,
+        args.qr_padding,
+        args.img_padding,
+        args.multiple_qrs)
+
     with args.output.open('wb') as f:
         template.make_tokens(cards, f)

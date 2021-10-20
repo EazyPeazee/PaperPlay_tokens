@@ -6,5 +6,17 @@
     {
         "id": "i/2",
         "image": "img/2.png"
+    },
+    {
+        "id": "i/3",
+        "image": "img/3.png"
+    },
+    {
+        "id": "i/4",
+        "image": "img/4.png"
+    },
+    {
+        "id": "i/5",
+        "image": "img/5.png"
     }
 ]

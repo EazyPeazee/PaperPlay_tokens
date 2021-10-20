@@ -8,6 +8,7 @@ from reportlab.lib.utils import ImageReader
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from PIL import Image
 
 from model.card import Card
 
@@ -15,15 +16,17 @@ from model.card import Card
 class Template:
     def __init__(self,
                  image_path: Path,
-                 card_size=50,
-                 min_margin=3,
-                 qr_padding=3,
-                 img_padding=2) -> None:
+                 card_size: float = 50,
+                 min_margin: float = 3,
+                 qr_padding: float = 3,
+                 img_padding: float = 2,
+                 multiple_qr_codes: bool = False) -> None:
         self.image_path = image_path
         self.card_size = (card_size * mm, card_size * mm)
         self.min_margin = (min_margin * mm, min_margin * mm)
         self.qr_padding = qr_padding * mm
         self.img_padding = img_padding * mm
+        self.multiple_qr_codes = multiple_qr_codes
 
     def make_tokens(self, cards: List[Card], sink: BinaryIO, paper_size=A4):
         num_cols = self._get_num_cols(paper_size)
@@ -38,19 +41,28 @@ class Template:
             self._make_page(c, page_cards, lambda item: ImageReader(self.image_path.joinpath(item.image_source)),
                             self.img_padding, paper_size, True, True)
 
-            self._make_page(c, page_cards, self._create_qr_img,
-                            self.qr_padding, paper_size, False, False)
+            self._make_page(c, page_cards, lambda card: self._create_qr_img(card, multi=self.multiple_qr_codes),
+                            self.qr_padding, paper_size, False, True)
             idx += tags_on_page
 
         c.save()
 
-    def _create_qr_img(self, card: Card):
-        img = qrcode.make(
+    def _create_qr_img(self, card: Card, multi: bool = False):
+        qrImg = qrcode.make(
             "https://paperplay.eu/" + card.id,
             error_correction=qrcode.constants.ERROR_CORRECT_H,
             box_size=16,
-            border=1,
+            border=4,
             version=3)
+        if multi:
+            img = Image.new('RGB', (2*qrImg.size[0],
+                            2*qrImg.size[1]), (255, 255, 255))
+            img.paste(qrImg, (0, 0))
+            img.paste(qrImg, (qrImg.size[0], 0))
+            img.paste(qrImg, (0, qrImg.size[1]))
+            img.paste(qrImg, (qrImg.size[0], qrImg.size[1]))
+        else:
+            img = qrImg
         output = io.BytesIO()
         img.save(output, format='png')
         output.seek(0)
@@ -83,8 +95,13 @@ class Template:
                     if frame:
                         canvas.rect(
                             posx, posy, self.card_size[0], self.card_size[1])
-                    canvas.drawImage(img_func(card), posx + padding, posy +
-                                     padding, self.card_size[0] - 2*padding, self.card_size[1] - 2*padding)
+                    canvas.drawImage(
+                        img_func(card),
+                        posx + padding,
+                        posy + padding,
+                        self.card_size[0] - 2*padding,
+                        self.card_size[1] - 2*padding,
+                        mask='auto')
                     if l2r:
                         posx += self.card_size[0]
                     else:
