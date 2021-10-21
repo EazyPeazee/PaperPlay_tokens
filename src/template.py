@@ -42,7 +42,7 @@ class Template:
                             self.img_padding, paper_size, True, True)
 
             self._make_page(c, page_cards, lambda card: self._create_qr_img(card, multi=self.multiple_qr_codes),
-                            self.qr_padding, paper_size, False, True)
+                            self.qr_padding, paper_size, False, False)
             idx += tags_on_page
 
         c.save()
