@@ -28,7 +28,7 @@ def create_arg_parser():
     parser.add_argument('output', type=out_file,
                         help='path to output file', default='tokens.pdf', nargs='?')
     parser.add_argument('--size', type=float,
-                        help='side length of cards in mm', default=50)
+                        help='side length of cards in mm', default=60)
     parser.add_argument('--margin', type=float,
                         help='minimal page margin', default=3)
     parser.add_argument('--img-padding', type=float,
@@ -36,7 +36,7 @@ def create_arg_parser():
     parser.add_argument('--qr-padding', type=float,
                         help='Padding of QR-codes', default=3)
     parser.add_argument(
-        '--multiple-qrs', help='Multuple QR codes per card', action='count', default=0)
+        '--multiple-qrs', help='Multuple QR codes per card', action='count', default=1)
     return parser
 
 

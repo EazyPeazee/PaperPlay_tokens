@@ -18,5 +18,33 @@
     {
         "id": "i/5",
         "image": "img/5.png"
+    },
+    {
+        "id": "i/6",
+        "image": "img/6.png"
+    },
+    {
+        "id": "i/7",
+        "image": "img/7.png"
+    },
+    {
+        "id": "i/8",
+        "image": "img/8.png"
+    },
+    {
+        "id": "i/9",
+        "image": "img/9.png"
+    },
+    {
+        "id": "i/10",
+        "image": "img/10.png"
+    },
+    {
+        "id": "i/11",
+        "image": "img/11.png"
+    },
+    {
+        "id": "i/12",
+        "image": "img/12.png"
     }
 ]
