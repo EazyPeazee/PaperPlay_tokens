@@ -34,7 +34,7 @@ def create_arg_parser():
     parser.add_argument('--img-padding', type=float,
                         help='Paddingn of images in mm', default=1)
     parser.add_argument('--qr-padding', type=float,
-                        help='Padding of QR-codes', default=3)
+                        help='Padding of QR-codes', default=10)
     parser.add_argument(
         '--multiple-qrs', help='Multuple QR codes per card', action='count', default=1)
     return parser
