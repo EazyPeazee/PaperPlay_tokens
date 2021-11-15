@@ -52,7 +52,7 @@ class Template:
             "https://paperplay.eu/" + card.id,
             error_correction=qrcode.constants.ERROR_CORRECT_H,
             box_size=16,
-            border=4,
+            border=2,
             version=3)
         if multi:
             img = Image.new('RGB', (2*qrImg.size[0],
