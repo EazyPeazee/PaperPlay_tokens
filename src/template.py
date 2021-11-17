@@ -95,13 +95,8 @@ class Template:
                     if frame:
                         canvas.rect(
                             posx, posy, self.card_size[0], self.card_size[1])
-                    canvas.drawImage(
-                        img_func(card),
-                        posx + padding,
-                        posy + padding,
-                        self.card_size[0] - 2*padding,
-                        self.card_size[1] - 2*padding,
-                        mask='auto')
+                    img = img_func(card)
+                    self.draw_image(canvas, img, posx, posy, padding)
                     if l2r:
                         posx += self.card_size[0]
                     else:
@@ -110,3 +105,17 @@ class Template:
         except StopIteration:
             pass
         canvas.showPage()
+
+    def draw_image(self, canvas: canvas, img: Image, posx: float, posy: float, padding: float):
+        img_width, img_height = img.getSize()
+        aspect_ratio = img_width / img_height
+        height = self.card_size[0] - 2 * padding
+        width = self.card_size[1] - 2 * padding
+        if aspect_ratio > 1:
+            height = height / aspect_ratio
+        elif aspect_ratio < 1:
+            width = width * aspect_ratio
+
+        x = posx + (self.card_size[0] - width) / 2
+        y = posy + (self.card_size[1] - height) / 2
+        canvas.drawImage(img, x, y, width, height, mask='auto')
